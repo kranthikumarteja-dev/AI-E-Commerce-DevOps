@@ -1,0 +1,54 @@
+name: Product Service CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "services/product-service/**"
+      - ".github/workflows/product-service-ci.yml"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "services/product-service/**"
+      - ".github/workflows/product-service-ci.yml"
+
+jobs:
+  build-test-scan:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Build and test
+        working-directory: services/product-service
+        run: |
+          mvn clean verify
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ai-ecommerce/product-service:${{ github.sha }} \
+            services/product-service
+
+      - name: Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: image
+          image-ref: ai-ecommerce/product-service:${{ github.sha }}
+          format: table
+          severity: CRITICAL
+          exit-code: "1"
+          ignore-unfixed: true
