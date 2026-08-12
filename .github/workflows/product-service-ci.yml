@@ -44,7 +44,7 @@ jobs:
             services/product-service
 
       - name: Trivy vulnerability scan
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: image
           image-ref: ai-ecommerce/product-service:${{ github.sha }}
