@@ -1,0 +1,27 @@
+# Maven
+**/target/
+*.jar
+*.war
+
+# Java
+*.class
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
